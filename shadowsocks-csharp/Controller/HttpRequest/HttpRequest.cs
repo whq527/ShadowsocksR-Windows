@@ -8,7 +8,7 @@ namespace Shadowsocks.Controller.HttpRequest
 {
     public abstract class HttpRequest
     {
-        private const string DefaultUserAgent = @"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.97 Safari/537.36";
+        private const string DefaultUserAgent = @"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.132 Safari/537.36";
         private const int DefaultGetTimeout = 30000;
         private const int DefaultHeadTimeout = 4000;
 
@@ -23,9 +23,7 @@ namespace Shadowsocks.Controller.HttpRequest
             var httpClient = new HttpClient(httpClientHandler)
             {
                 Timeout = TimeSpan.FromMilliseconds(timeout),
-#if IsDotNetCore
                 DefaultRequestVersion = new Version(2, 0)
-#endif
             };
             var request = new HttpRequestMessage(HttpMethod.Get, url);
             request.Headers.Add(@"User-Agent", string.IsNullOrWhiteSpace(userAgent) ? DefaultUserAgent : userAgent);
@@ -47,9 +45,7 @@ namespace Shadowsocks.Controller.HttpRequest
             var httpClient = new HttpClient(httpClientHandler)
             {
                 Timeout = TimeSpan.FromMilliseconds(timeout),
-#if IsDotNetCore
                 DefaultRequestVersion = new Version(2, 0)
-#endif
             };
 
             HttpResponseMessage response = null;

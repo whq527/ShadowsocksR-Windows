@@ -6,6 +6,7 @@ using Shadowsocks.Model.Transfer;
 using Shadowsocks.Util;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Net.Sockets;
@@ -167,11 +168,11 @@ namespace Shadowsocks.Controller
 
         public void SaveServersPortMap(Configuration config)
         {
-            Global.GuiConfig.PortMap = config.PortMap;
             StopPortMap();
+            Global.GuiConfig.PortMap = config.PortMap;
+            Global.GuiConfig.FlushPortMapCache();
             LoadPortMap();
             SaveAndNotifyChanged();
-            Global.GuiConfig.FlushPortMapCache();
         }
 
         /// <summary>
@@ -190,8 +191,7 @@ namespace Shadowsocks.Controller
         {
             try
             {
-                var urls = new List<string>();
-                Utils.URL_Split(ssUrLs, ref urls);
+                var urls = ssUrLs.GetLines().Reverse();
                 var i = 0;
                 foreach (var url in urls.Where(url => url.StartsWith(@"ss://", StringComparison.OrdinalIgnoreCase) || url.StartsWith(@"ssr://", StringComparison.OrdinalIgnoreCase)))
                 {
@@ -463,6 +463,24 @@ namespace Shadowsocks.Controller
             HostMap.Reload();
         }
 
+        private void StartPrivoxy()
+        {
+            const int max = 5;
+            var i = 0;
+            while (true)
+            {
+                try
+                {
+                    _privoxyRunner.Start(Global.GuiConfig);
+                    break;
+                }
+                catch (Win32Exception) when (i < max)
+                {
+                    ++i;
+                }
+            }
+        }
+
         public void Reload()
         {
             StopPortMap();
@@ -495,7 +513,7 @@ namespace Shadowsocks.Controller
             // http://stackoverflow.com/questions/10235093/socket-doesnt-close-after-application-exits-if-a-launched-process-is-open
             try
             {
-                _privoxyRunner.Start(Global.GuiConfig);
+                StartPrivoxy();
 
                 var local = new Local(Global.GuiConfig, _transfer, _chnRangeSet);
                 var services = new List<Listener.IService>

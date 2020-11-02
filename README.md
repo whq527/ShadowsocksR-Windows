@@ -2,7 +2,7 @@
 =======================
 
 [![](https://img.shields.io/badge/Telegram-Channel-blue)](https://t.me/ShadowsocksR_Windows)
-[![](https://img.shields.io/badge/Telegram-Group-green)](https://t.me/joinchat/Gn-Aa0-j4HdelXeIIfmnnA)
+[![](https://img.shields.io/badge/Telegram-Group-green)](https://t.me/joinchat/Gn-Aa0-j4HcpdBaW-Iv8Sw)
 
 ## Build
 
@@ -12,9 +12,9 @@
 
 ## 相关推荐
 
-[**翻墙功夫网 :100:**](https://iplc.store/register?aff=6476)
+[**壁虎翻墙网 :100:**](https://geckoiplc.org/register?aff=z9dkkpHM)
 
-这是我所选择的服务器提供商，IPLC专线翻墙、稳定、速度快、价格便宜。欢迎大家使用我的推广链接前去注册。https://iplc.store/register?aff=6476
+这是我所选择的服务器提供商，IPLC专线翻墙、稳定、速度快、价格便宜。欢迎大家使用我的推广链接前去注册。https://geckoiplc.org/register?aff=z9dkkpHM
 
 ## Download
 
@@ -31,6 +31,6 @@ Visual Studio Community 2019 is recommended.
 
 GPLv3
 
-Copyright © HMBSbige 2019. Forked from ShadowsocksR by BreakWa11
+Copyright © HMBSbige 2019 - 2020. Forked from ShadowsocksR by BreakWa11
 
 [latest release]: https://github.com/HMBSbige/ShadowsocksR-Windows/releases

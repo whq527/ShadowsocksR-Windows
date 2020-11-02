@@ -3,9 +3,6 @@ using Shadowsocks.Controller;
 using Shadowsocks.Encryption;
 using Shadowsocks.Model;
 using System;
-#if !IsDotNetCore
-using System.Collections.Concurrent;
-#endif
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -338,34 +335,6 @@ namespace Shadowsocks.Util
             return bytes == 0 ? $@"{bytes}Byte" : $@"{bytes}Bytes";
         }
 
-        public static void URL_Split(string text, ref List<string> outUrls)
-        {
-            while (true)
-            {
-                if (string.IsNullOrEmpty(text))
-                {
-                    return;
-                }
-
-                var ssIndex = text.IndexOf(@"ss://", 1, StringComparison.OrdinalIgnoreCase);
-                var ssrIndex = text.IndexOf(@"ssr://", 1, StringComparison.OrdinalIgnoreCase);
-                var index = ssIndex;
-                if (index == -1 || index > ssrIndex && ssrIndex != -1) index = ssrIndex;
-                if (index == -1)
-                {
-                    outUrls.Insert(0, text);
-                }
-                else
-                {
-                    outUrls.Insert(0, text.Substring(0, index));
-                    text = text.Substring(index);
-                    continue;
-                }
-
-                break;
-            }
-        }
-
         public static IEnumerable<Server> Except(this IEnumerable<Server> x, IList<Server> y)
         {
             return from xi in x let found = y.Any(xi.IsMatchServer) where !found select xi;
@@ -384,25 +353,5 @@ namespace Shadowsocks.Util
                 yield return line;
             }
         }
-
-        public static async void WriteAllTextAsync(string path, string str)
-        {
-#if IsDotNetCore
-            await File.WriteAllTextAsync(path, str);
-#else
-            using var sw = new StreamWriter(path);
-            await sw.WriteAsync(str);
-#endif
-        }
-
-#if !IsDotNetCore
-        public static void Clear<T>(this ConcurrentQueue<T> queue)
-        {
-            while (queue.TryDequeue(out _))
-            {
-
-            }
-        }
-#endif
     }
 }

@@ -279,7 +279,6 @@ namespace Shadowsocks.Controller
                             ((MenuItem)pacMenuItem.Items[5]).Click += UpdatePACFromGFWListItem_Click;
 
                             ((MenuItem)pacMenuItem.Items[7]).Click += UpdatePACFromCNOnlyListItem_Click;
-                            ((MenuItem)pacMenuItem.Items[8]).Click += UpdatePACFromCNOnlyListFireFoxItem_Click;
 
                             ruleBypassLan = (MenuItem)proxyMenuItem.Items[0];
                             ruleBypassChina = (MenuItem)proxyMenuItem.Items[1];
@@ -395,7 +394,6 @@ namespace Shadowsocks.Controller
             var count = 0;
             if (!string.IsNullOrWhiteSpace(Global.UpdateNodeChecker.FreeNodeResult))
             {
-                var urls = new List<string>();
                 Global.UpdateNodeChecker.FreeNodeResult = Global.UpdateNodeChecker.FreeNodeResult.TrimEnd('\r', '\n', ' ');
                 var config = Global.GuiConfig;
                 var selectedServer = config.Configs.ElementAtOrDefault(config.Index);
@@ -407,12 +405,10 @@ namespace Shadowsocks.Controller
                 {
                     Global.UpdateNodeChecker.FreeNodeResult = string.Empty;
                 }
-                Utils.URL_Split(Global.UpdateNodeChecker.FreeNodeResult, ref urls);
+                var urls = Global.UpdateNodeChecker.FreeNodeResult.GetLines().ToList();
                 urls.RemoveAll(url => !url.StartsWith(@"ssr://"));
                 if (urls.Count > 0)
                 {
-                    urls.Reverse();
-
                     lastGroup = Global.UpdateSubscribeManager.CurrentServerSubscribe.OriginTag;
                     if (string.IsNullOrEmpty(lastGroup))
                     {
@@ -473,6 +469,12 @@ namespace Shadowsocks.Controller
                         {
                             // ignored
                         }
+                    }
+
+                    //Group name is not empty
+                    foreach (var newServer in newServers.Where(newServer => string.IsNullOrEmpty(newServer.Group)))
+                    {
+                        newServer.Group = lastGroup;
                     }
 
                     count = newServers.Count;
@@ -704,6 +706,7 @@ namespace Shadowsocks.Controller
                     }
                     else
                     {
+                        groupItem.Header = subItem.Header;
                         sub.Add(groupItem);
                         if (isSelected)
                         {
@@ -1172,12 +1175,6 @@ namespace Shadowsocks.Controller
         {
             //回国
             controller.UpdatePACFromOnlinePac(@"https://raw.githubusercontent.com/HMBSbige/Text_Translation/master/ShadowsocksR/ss_white_r.pac");
-        }
-
-        private void UpdatePACFromCNOnlyListFireFoxItem_Click(object sender, RoutedEventArgs e)
-        {
-            //回国
-            controller.UpdatePACFromOnlinePac(@"https://raw.githubusercontent.com/HMBSbige/Text_Translation/master/ShadowsocksR/ss_white_r_Firefox.pac");
         }
 
         private void UpdatePACFromCnWhiteListIpItem_Click(object sender, RoutedEventArgs e)

@@ -1,8 +1,4 @@
-﻿#if IsDotNetCore
-using System.Text.Json.Serialization;
-#else
-using Newtonsoft.Json;
-#endif
+﻿using System.Text.Json.Serialization;
 using Shadowsocks.Enums;
 using Shadowsocks.Util;
 using Shadowsocks.ViewModel;
@@ -453,7 +449,13 @@ namespace Shadowsocks.Model
             IsPreRelease = false;
             AutoCheckUpdate = true;
             LangName = string.Empty;
-            DnsClients = new List<DnsClient>();
+            DnsClients = new List<DnsClient>
+            {
+                new DnsClient(DnsType.DnsOverTls) {DnsServer = @"1.1.1.1"},
+                new DnsClient(DnsType.Default) {DnsServer = @"1.1.1.1"},
+                new DnsClient(DnsType.DnsOverTls),
+                new DnsClient(DnsType.Default)
+            };
             ServerSubscribes = new List<ServerSubscribe>();
             PortMap = new Dictionary<string, PortMapConfig>();
         }
